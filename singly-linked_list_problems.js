@@ -133,7 +133,10 @@ const reverse = (head) => {
   // The former tail, a.k.a the new head, at this point, is previousNode.
 
   return previousNode;
-}
+};
+
+
+
 
 // Write a function that for creating a new copy of a linked list.
 
@@ -152,6 +155,63 @@ const copy = (head) => {
   }
 
   return newHead;
-}
+};
 
 // Complexity: O(n) time and O(1) space
+
+
+
+
+
+// You have a linked list ↴ and want to find the kth to last node.
+// Write a function kthToLastNode() that takes an integer k and the headNode of a singly linked list, and returns the kth to last node in the list.
+
+// Solution 1: We can't traverse through the list to get to the last node, and then walk backwards, since singly-linked lists don't supoort backwards movement.
+// However, we can find the length of the list and find how far we need to move forward to get to the node we're looking for.
+// If the list has length n, and we're looking for the kth to last node, then we need to take n - k steps from the head to reach it.
+
+const kthToLastNode = (k, head) => {
+  let count = 1;
+  let currentNode = head;
+
+  while (currentNode.next) {
+    currentNode = currentNode.next;
+    count += 1;
+  }
+
+  const steps = count - k;
+  currentNode = head;
+
+  for (let i = 0; i < steps; i++) {
+    currentNode = currentNode.next;
+  }
+
+  return currentNode;
+};
+
+// Complexity: O(n) time and O(1) space
+
+// The runtime is O(n). Since we take n steps to find the length of our list and another n - k steps to find the node we are looking for,
+// in the worst case (k = 1) we traverse the list twice, taking 2n steps.
+
+// Solution 2: We can do it with just one pass through our list. If we had a stick that spanned k nodes,
+// we could slide the stick down the list until its right end hit the end. Then the left end would be at the kth node.
+// This won't save use time (The number of steps doesn't change), but it is an alternative to Solution 1.
+// Note: If we store node data in an LRU cache, however, this might save us a little time, because, here,
+// there's a shorter amount of time between the first and second time we access a given node.
+
+const kthToLastNode2 = (k, head) => {
+  let leftmostNodeOfStick = head;
+  let rightmostNodeOfStick = head;
+
+  for (let i = 0; i < k - 1; i++) {
+    rightmostNodeOfStick = rightmostNodeOfStick.next;
+  }
+
+  while (rightmostNodeOfStick.next) {
+    leftmostNodeOfStick = leftmostNodeOfStick.next;
+    rightmostNodeOfStick = rightmostNodeOfStick.next;
+  }
+
+  return leftmostNodeOfStick;
+};
