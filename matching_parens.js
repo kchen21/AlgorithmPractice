@@ -36,3 +36,51 @@ const getIndexOfClosingParen = (string, indexOfOpeningParen) => {
 // That gets us from O(n) space to O(1) space.
 
 let indexOfClosingParen = getIndexOfClosingParen("Sometimes (when I nest them (my parentheticals) too much (like this (and this))) they get confusing.", 10);
+
+
+
+
+// Let's say:
+//
+// '(', '{', '[' are called "openers."
+// ')', '}', ']' are called "closers."
+// Write an efficient function that tells us whether or not an input string's openers and closers are properly nested.
+//
+// Examples:
+//
+// "{ [ ] ( ) }" should return true
+// "{ [ ( ] ) }" should return false
+// "{ [ }" should return false
+
+const bracketsValid = (code) => {
+  const openersToClosers = {
+    '(': ')',
+    '{': '}',
+    '[': ']'
+  };
+
+  const openers = new Set(['(', '{', '[']);
+  const closers = new Set([')', '}', ']']);
+
+  const openersStack = [];
+
+  for (let i = 0; i < code.length; i++) {
+    let char = code.charAt(i);
+
+    if (openers.has(char)) {
+      openersStack.push(char);
+    } else if (closers.has(char)) {
+      if (openersStack.length === 0) {
+        return false;
+      } else if (openersToClosers[openersStack.pop()] !== char) {
+        return false;
+      }
+    }
+  }
+
+  return openersStack.length === 0;
+};
+
+console.log("should return true: " + bracketsValid("{ [ ] ( ) }"));
+console.log("should return false: " + bracketsValid("{ [ ( ] ) }"));
+console.log("should return false: " + bracketsValid("{ [ }"));
