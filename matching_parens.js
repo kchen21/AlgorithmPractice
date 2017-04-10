@@ -84,3 +84,6 @@ const bracketsValid = (code) => {
 console.log("should return true: " + bracketsValid("{ [ ] ( ) }"));
 console.log("should return false: " + bracketsValid("{ [ ( ] ) }"));
 console.log("should return false: " + bracketsValid("{ [ }"));
+
+// Complexity:
+// O(n) time and O(n) space
