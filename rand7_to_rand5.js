@@ -10,7 +10,7 @@ const rand7 = () => {
 const rand5 = () => {
   let randomNumber = 6; // initialize randomNumber as a number greater than 5
 
-  if (randomNumber > 5) {
+  while (randomNumber > 5) {
     randomNumber = rand7();
   }
 
