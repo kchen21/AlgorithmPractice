@@ -57,3 +57,26 @@ const isSingleRiffleShuffleRecursiveOptimized = (shuffledDeck, shuffledDeckIndex
 
 // We have n + 1 frames, so the space cost is still O(n).
 // However, for each frame, we have a constant number of operations, so the runtime is O(n) now instead of O(n^2).
+
+// Solution 3: We can reduce the space cost to O(1) if we use an iterative approach rather than a recursive one.
+
+const isSingleRiffleShuffleIterative = (shuffledDeck, half1, half2) => {
+  let half1Index = 0;
+  let half2Index = 0;
+
+  for (let i = 0; i < shuffledDeck.length; i++) {
+    let card = shuffledDeck[i];
+
+    if (card === half1[half1Index]) {
+      half1Index++;
+    } else if (card === half2[half2Index]) {
+      half2Index++;
+    } else {
+      return false;
+    }
+  }
+
+  return true;
+};
+
+// Complexity: O(n) time and O(1) space
