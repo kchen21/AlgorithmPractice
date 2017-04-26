@@ -43,3 +43,61 @@ const findDuplicate = (arr) => {
 // What if we sorted the array? Then we can iterate through it and return an element if it is equal to the previous element.
 // If we use an in-place merge-sort, we can cut our runtime down to O(nlogn). However, in-place sorts are destructive.
 // Can we find a non-destructive solution?
+
+// Solution 3: We should attempt to get O(nlogn) time again. What can give us O(nlogn) time?
+// The logn in nlogn comes from breaking a problem down into smaller sub-problems of equal size.
+
+// What if we could implement something like binary search?
+// 1. Iterate through the array and find the numbers between 1 and n/2.
+// 2. If the total is greater than n/2, then (by the Pigeonhole Principle) one of those numbers must be a duplicate.
+//    If the total is less than or equal to n/2, then the duplicate must be a number from n/2 + 1 to n.
+// 3. Once we find out which range the duplicate is in, we divide than range in half and repeat the process.
+//    We iterate through the array lgn times, so the runtime is O(nlgn).
+
+// We should use an iterative solution instead of a recursive one, because a recursive solution incurs a space cost in the call stack.
+
+function findDuplicate3(arr) {
+
+    var floor = 1;
+    var ceiling = arr.length - 1;
+
+    while (floor < ceiling) {
+
+        // Divide our range 1..n into an upper range and lower range (such that they don't overlap)
+        // Lower range is floor..midpoint
+        // Upper range is midpoint+1..ceiling
+        var midpoint = Math.floor(floor + ((ceiling - floor) / 2));
+        var lowerRangeFloor   = floor;
+        var lowerRangeCeiling = midpoint;
+        var upperRangeFloor   = midpoint + 1;
+        var upperRangeCeiling = ceiling;
+
+        var distinctPossibleIntegersInLowerRange = lowerRangeCeiling - lowerRangeFloor + 1;
+
+        // Count number of items in lower range
+        var itemsInLowerRange = 0;
+        arr.forEach(function(item) {
+
+            // Is it in the lower range?
+            if (item >= lowerRangeFloor && item <= lowerRangeCeiling) {
+                itemsInLowerRange += 1;
+            }
+        });
+
+        if (itemsInLowerRange > distinctPossibleIntegersInLowerRange) {
+
+            // There must be a duplicate in the lower range, so use the same approach iteratively on that range
+            floor   = lowerRangeFloor;
+            ceiling = lowerRangeCeiling;
+        } else {
+
+            // There must be a duplicate in the upper range, so use the same approach iteratively on that range
+            floor   = upperRangeFloor;
+            ceiling = upperRangeCeiling;
+        }
+    }
+
+    // Floor and ceiling have converged
+    // We found a number that repeats!
+    return floor;
+}
