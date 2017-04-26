@@ -14,14 +14,11 @@
 // We can consider the duplicate we are looking for the "needle" and the array it is in the "haystack".
 
 const findDuplicate = (arr) => {
-  let hasBeenSeen; // Since let is block-scoped, we have to declare variables here so we are not creating a new variable for each block
-  let el;
-
   for (let needle = 1; needle < arr.length; needle++) {
-    // let hasBeenSeen = false;
+    let hasBeenSeen = false;
     hasBeenSeen = false;
     for (let i = 0; i < arr.length; i++) {
-      // let el = arr[i];
+      let el = arr[i];
       el = arr[i];
 
       if (el === needle) {
@@ -56,48 +53,32 @@ const findDuplicate = (arr) => {
 
 // We should use an iterative solution instead of a recursive one, because a recursive solution incurs a space cost in the call stack.
 
-function findDuplicate3(arr) {
+const findDuplicate3 = (arr) => {
+  let floor = 1;
+  let ceiling = arr.length - 1;
 
-    var floor = 1;
-    var ceiling = arr.length - 1;
+  while (floor < ceiling) {
+    let midpoint = Math.floor(floor + ((ceiling - floor) / 2));
+    let lowerRangeFloor = floor;
+    let lowerRangeCeiling = midpoint;
+    let upperRangeFloor = midpoint + 1;
+    let upperRangeCeiling = ceiling;
 
-    while (floor < ceiling) {
+    let distinctNumbersInLowerRange = lowerRangeCeiling - lowerRangeFloor + 1;
 
-        // Divide our range 1..n into an upper range and lower range (such that they don't overlap)
-        // Lower range is floor..midpoint
-        // Upper range is midpoint+1..ceiling
-        var midpoint = Math.floor(floor + ((ceiling - floor) / 2));
-        var lowerRangeFloor   = floor;
-        var lowerRangeCeiling = midpoint;
-        var upperRangeFloor   = midpoint + 1;
-        var upperRangeCeiling = ceiling;
+    let itemsInLowerRange = 0;
+    arr.forEach((num) => {
+      if (num >= lowerRangeFloor && num <= lowerRangeCeiling) {
+        itemsInLowerRange++;
+      }
+    });
 
-        var distinctPossibleIntegersInLowerRange = lowerRangeCeiling - lowerRangeFloor + 1;
-
-        // Count number of items in lower range
-        var itemsInLowerRange = 0;
-        arr.forEach(function(item) {
-
-            // Is it in the lower range?
-            if (item >= lowerRangeFloor && item <= lowerRangeCeiling) {
-                itemsInLowerRange += 1;
-            }
-        });
-
-        if (itemsInLowerRange > distinctPossibleIntegersInLowerRange) {
-
-            // There must be a duplicate in the lower range, so use the same approach iteratively on that range
-            floor   = lowerRangeFloor;
-            ceiling = lowerRangeCeiling;
-        } else {
-
-            // There must be a duplicate in the upper range, so use the same approach iteratively on that range
-            floor   = upperRangeFloor;
-            ceiling = upperRangeCeiling;
-        }
+    if (itemsInLowerRange > distinctNumbersInLowerRange) {
+      ceiling = lowerRangeCeiling;
+    } else {
+      floor = upperRangeFloor;
     }
+  }
 
-    // Floor and ceiling have converged
-    // We found a number that repeats!
-    return floor;
-}
+  return floor;
+};
