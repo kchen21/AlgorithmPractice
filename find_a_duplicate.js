@@ -82,3 +82,18 @@ const findDuplicate3 = (arr) => {
 
   return floor;
 };
+
+
+// Solution 4: We can solve the problem in O(n) time and O(1) space if we traverse our array as if it were a linked list,
+// where each node has a value equal to the element, and a next pointer to the element that is in the value-th position.
+// The linked list has to have a cycle, and furthermore, there must be multiple nodes pointing to the first node in that cycle.
+// That first node's position represents a duplicate in our array, so we just need an algorithm to find it.
+
+// We can do the following:
+// 1. Get inside a cycle: Start at position n+1, the head of the linked list, and walk n steps to find a position guaranteed to be in the cycle
+// 2. Find the length of the cycle: Remember the position we found in the previous step and count the number of steps it takes to get back to that position
+// 3. Find the first node of the cycle:
+//    - Start two pointers, one at position n+1, the head of the linked list, and another at the position that we end up at after taking "cycle length" steps
+//    - Advance both pointers at the same time until the pointers are at the same position (This will be the position of the first node of the cycle, and thus, a duplicate in our array.)
+
+// See https://www.interviewcake.com/question/javascript/find-duplicate-optimize-for-space-beast-mode for a more detailed explanation and implemented code.
