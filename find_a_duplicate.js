@@ -96,4 +96,38 @@ const findDuplicate3 = (arr) => {
 //    - Start two pointers, one at position n+1, the head of the linked list, and another at the position that we end up at after taking "cycle length" steps
 //    - Advance both pointers at the same time until the pointers are at the same position (This will be the position of the first node of the cycle, and thus, a duplicate in our array.)
 
-// See https://www.interviewcake.com/question/javascript/find-duplicate-optimize-for-space-beast-mode for a more detailed explanation and implemented code.
+// See https://www.interviewcake.com/question/javascript/find-duplicate-optimize-for-space-beast-mode for a more detailed explanation.
+
+const findDuplicate4 = (arr) => {
+  const n = arr.length - 1;
+
+  let positionInCycle = n + 1;
+  for (let i = 0; i < n; i++) {
+    positionInCycle = arr[positionInCycle - 1];
+  }
+
+  const rememberedPositionInCycle = positionInCycle;
+
+  let currentPositionInCycle = arr[positionInCycle - 1];
+  let cycleStepCount = 1;
+
+  while (currentPositionInCycle !== rememberedPositionInCycle) {
+    currentPositionInCycle = arr[currentPositionInCycle - 1];
+    cycleStepCount += 1;
+  }
+
+  let pointerStart = n + 1;
+  let pointerAhead = n + 1;
+  for (let step = 0; step < cycleStepCount; step++) {
+    pointerAhead = arr[pointerAhead - 1];
+  }
+
+  while (pointerStart !== pointerAhead) {
+    pointerStart = arr[pointerStart - 1];
+    pointerAhead = arr[pointerAhead - 1];
+  }
+
+  return pointerStart;
+};
+
+// Complexity: O(n) time and O(1) space
